@@ -76,4 +76,5 @@ if __name__ == '__main__':
 	label = tkinter.Label(window, text = txt,wraplength=window.winfo_screenwidth(), justify="left", font = 'calibri 13').pack()
 	window.mainloop()
 
+# test
 
