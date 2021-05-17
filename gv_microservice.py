@@ -45,6 +45,10 @@ class Wiki:
 		# to be implemented with Michele's code
 		return ''
 
+
+movies_list = ['Safety Not Guaranteed','Titanic (1997 film)', 'The Matrix', \
+			   'La Jetée', 'Hot Tub Time Machine', 'WandaVision', 'Lost (TV series)']
+
 #class GUI:
 	#def start_GUI(self):
 
