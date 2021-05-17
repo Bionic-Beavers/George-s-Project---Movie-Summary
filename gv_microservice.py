@@ -4,7 +4,6 @@ import nltk  # I may have to add in nltk.download('punkt')
 from wikipedia import WikipediaPage
 import tkinter as tk
 
-
 class Wiki:
     """Class for Wikipedia movie info. """
 
@@ -57,40 +56,45 @@ class Wiki:
         return ''
 
 
-test_movies_list = ['Safety Not Guaranteed', 'Titanic (1997 film)', 'The Matrix',
+'''test_movies_list = ['Safety Not Guaranteed', 'Titanic (1997 film)', 'The Matrix',
                'La Jetée', 'Hot Tub Time Machine', 'WandaVision',
-               'Lost (TV series)', 'Alias (TV shows)', 'computer science', 'curry']
+               'Lost (TV series)', 'Alias (TV shows)', 'computer science', 'curry']'''
 
 class GUI:
     def __init__(self):
-        pass
+        self.window = tk.Tk()
+        width = self.window.winfo_screenwidth()
+        height = self.window.winfo_screenheight()
+        self.window.geometry("%dx%d" % (width, height))
+        self.window.title("Movie Summary")
+        self.window.attributes('-topmost', True)  # ensure this window is on top
+        self.window.grid_columnconfigure(0, weight = 1) # not totally sure what this does or if it's necessary
+
+    def get_movie_info(self):
+        if self.text_input.get():
+            movie = self.text_input.get()
+            mov = Wiki(movie)
+            plot = mov.get_plot()
+            score = mov.get_rt_score()
+            keywords = mov.get_keywords()
+            txt = "Movie Summary:" + '\n' + plot + '\n\n' + 'Rotten Tomatoes score:' + \
+                  '\n' + score + '\n\n' + 'Keywords:' + '\n' + keywords
+        else:
+            txt = 'Please enter a movie!'
+
+        self.label = tk.Label(self.window, text=txt,
+                              wraplength=self.window.winfo_screenwidth(),
+                              justify="left", font='calibri 13')
+        self.label.grid(row=3, column=0)
 
     def initiate_GUI(self):
-        window = tk.Tk()
-        width = window.winfo_screenwidth()
-        height = window.winfo_screenheight()
-        window.geometry("%dx%d" % (width, height))
-        window.title("Movie Summary")
-        window.attributes('-topmost', True)  # ensure this window is on top
-        window.grid_columnconfigure(0, weight = 1) # not totally sure what this does
-        plot = mov.get_plot()
-        score = mov.get_rt_score()
-        kw = mov.get_keywords()
-        txt = "Movie Summary:" + '\n' + plot + '\n\n\n' + 'Rotten Tomatoes score:' + \
-              '\n' + score + '\n\n\n' + 'Keywords:' + '\n' + kw
-        label = tk.Label(window, text=txt,
-                          wraplength=window.winfo_screenwidth(),
-                          justify="left", font='calibri 13')#.pack()
-
-        label.grid(row=0, column=0, sticky="N", padx=5, pady=5)
-        window.mainloop()
+        welcome_label = tk.Label(self.window, text = 'Enter a movie title!',font='calibri 20')
+        welcome_label.grid(row = 0, column = 0, sticky = "N", padx = 20, pady = 10)
+        self.text_input = tk.Entry()
+        self.text_input.grid(row = 1, column = 0, sticky = "WE", padx = 10)
+        dl_button = tk.Button(text = 'Go', font = 'calibri 13', command = self.get_movie_info)
+        dl_button.grid(row=2, column=0, sticky="WE", padx=5, pady=5)
+        self.window.mainloop()
 
 if __name__ == '__main__':
-
-    #mov = Wiki(input('Enter a movie title:\n'))
-    mov = Wiki('The Matrix')
-
-
-
-
     GUI().initiate_GUI()
