@@ -20,27 +20,22 @@ class Wiki:
                     return plot_section
             except TypeError:
                 continue
-
-
-
-
-
-
+        if plot_section is None:
+            plot_section = 'none'
+            return plot_section
 
     # In future have it search for the section names to speed this up
-    # other tests: WandaVision,
 
-    # make try except there ^
     def get_rt_score(self):
         full_page = WikipediaPage(self.title).content
-        rt_score = 'Not Found'  # A safeguard in case there is no RT score
         sentences = nltk.sent_tokenize(full_page)
-        rt_score = \
-        [x for x in sentences if "Rotten Tomatoes" in x and "%" in x][0]
+        rt_score = [x for x in sentences if "Rotten Tomatoes" in x and "%" in x]
 
-        # TODO: Make safeguard for if it's not found (try except?)
-        # IMPORTANT! ex. La Jetee. Also see Black Beauty
-        # also try random non-movies (biology, curry, buffalo, computer science
+        # for films without a Rotten Tomatoes score (ex. La Jetee)
+        if rt_score != []:
+            rt_score = rt_score[0]
+        else:
+            rt_score = 'none'
 
         # To clean it up and remove everything before the last newline char:
         rt_score = rt_score.strip()  # remove trailing \n
@@ -58,7 +53,7 @@ class Wiki:
         return ''
 
 
-movies_list = ['Safety Not Guaranteed', 'Titanic (1997 film)', 'The Matrix',
+test_movies_list = ['Safety Not Guaranteed', 'Titanic (1997 film)', 'The Matrix',
                'La Jetée', 'Hot Tub Time Machine', 'WandaVision',
                'Lost (TV series)', 'Alias (TV shows)', 'computer science', 'curry']
 
@@ -83,4 +78,5 @@ if __name__ == '__main__':
     label = tkinter.Label(window, text=txt,
                           wraplength=window.winfo_screenwidth(),
                           justify="left", font='calibri 13').pack()
+    window.attributes('-topmost', True)
     window.mainloop()
