@@ -1,5 +1,8 @@
+# credit: uses this as a guideline for structuring my tkinter: https://www.youtube.com/watch?v=73WpYMulq2k
+
 import nltk  # I may have to add in nltk.download('punkt')
 from wikipedia import WikipediaPage
+import tkinter as tk
 
 
 class Wiki:
@@ -17,6 +20,7 @@ class Wiki:
                 plot_section = WikipediaPage(self.title).section(i)
                 plot_section = plot_section[:1000] + '...'  # this is a brief SUMMARY, not the whole movie
                 if plot_section is not None:
+                    plot_section = plot_section.replace('\n',' ') # remove newlines
                     return plot_section
             except TypeError:
                 continue
@@ -57,26 +61,36 @@ test_movies_list = ['Safety Not Guaranteed', 'Titanic (1997 film)', 'The Matrix'
                'La Jetée', 'Hot Tub Time Machine', 'WandaVision',
                'Lost (TV series)', 'Alias (TV shows)', 'computer science', 'curry']
 
-# class GUI:
-# def start_GUI(self):
+class GUI:
+    def __init__(self):
+        pass
+
+    def initiate_GUI(self):
+        window = tk.Tk()
+        width = window.winfo_screenwidth()
+        height = window.winfo_screenheight()
+        window.geometry("%dx%d" % (width, height))
+        window.title("Movie Summary")
+        window.attributes('-topmost', True)  # ensure this window is on top
+        window.grid_columnconfigure(0, weight = 1) # not totally sure what this does
+        plot = mov.get_plot()
+        score = mov.get_rt_score()
+        kw = mov.get_keywords()
+        txt = "Movie Summary:" + '\n' + plot + '\n\n\n' + 'Rotten Tomatoes score:' + \
+              '\n' + score + '\n\n\n' + 'Keywords:' + '\n' + kw
+        label = tk.Label(window, text=txt,
+                          wraplength=window.winfo_screenwidth(),
+                          justify="left", font='calibri 13')#.pack()
+
+        label.grid(row=0, column=0, sticky="N", padx=5, pady=5)
+        window.mainloop()
 
 if __name__ == '__main__':
-    mov = Wiki(input('Enter a movie title:\n'))
-    # mov = Wiki("The Matrix")
 
-    import tkinter
+    #mov = Wiki(input('Enter a movie title:\n'))
+    mov = Wiki('The Matrix')
 
-    window = tkinter.Tk()
-    width = window.winfo_screenwidth()
-    height = window.winfo_screenheight()
-    window.geometry("%dx%d" % (width, height))
 
-    window.title("Movie Summary")
 
-    txt = "Movie Summary:" + '\n' + mov.get_plot() + '\n\n\n' + 'Rotten Tomatoes score:' + \
-          '\n' + mov.get_rt_score() + '\n\n\n' + 'Keywords:' + '\n' + mov.get_keywords()
-    label = tkinter.Label(window, text=txt,
-                          wraplength=window.winfo_screenwidth(),
-                          justify="left", font='calibri 13').pack()
-    window.attributes('-topmost', True)
-    window.mainloop()
+
+    GUI().initiate_GUI()
