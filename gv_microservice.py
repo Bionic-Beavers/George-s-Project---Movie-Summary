@@ -1,8 +1,10 @@
 # credit: uses this as a guideline for structuring my tkinter: https://www.youtube.com/watch?v=73WpYMulq2k
+# GET AND POST using code from here: https://www.geeksforgeeks.org/get-post-requests-using-python/
 
 import nltk  # I may have to add in nltk.download('punkt')
 from wikipedia import WikipediaPage
 import tkinter as tk
+import requests
 
 class Wiki:
     """Class for Wikipedia movie info. """
@@ -12,6 +14,7 @@ class Wiki:
 
     def get_plot(self):
         # This is in case 'Plot' is not found
+        # In the future have it search for the section names to speed this up
         plot_names = ['Plot', 'Summary', 'Premise', 'Synopsis']
         plot_section = None # not necessary?
         for i in plot_names:
@@ -27,7 +30,6 @@ class Wiki:
             plot_section = 'none'
             return plot_section
 
-    # In future have it search for the section names to speed this up
 
     def get_rt_score(self):
         full_page = WikipediaPage(self.title).content
@@ -55,39 +57,40 @@ class Wiki:
         # to be implemented with Michele's code
         return ''
 
-
-'''test_movies_list = ['Safety Not Guaranteed', 'Titanic (1997 film)', 'The Matrix',
-               'La Jetée', 'Hot Tub Time Machine', 'WandaVision',
-               'Lost (TV series)', 'Alias (TV shows)', 'computer science', 'curry']'''
-
 class GUI:
     def __init__(self):
         self.window = tk.Tk()
         width = self.window.winfo_screenwidth()
         height = self.window.winfo_screenheight()
         self.window.geometry("%dx%d" % (width, height))
-        self.window.title("Movie Summary")
         self.window.attributes('-topmost', True)  # ensure this window is on top
         self.window.grid_columnconfigure(0, weight = 1) # not totally sure what this does or if it's necessary
 
     def get_movie_info(self):
         if self.text_input.get():
-            movie = self.text_input.get()
-            mov = Wiki(movie)
-            plot = mov.get_plot()
-            score = mov.get_rt_score()
-            keywords = mov.get_keywords()
+            self.movie = self.text_input.get()
+
+            # omit this- it messes up other things like Titanic (1997 film)
+            #movie = movie.title() # capitalizes first letter of every word (for safety not guaranteed)
+            self.mov = Wiki(self.movie)
+            plot = self.mov.get_plot()
+            score = self.mov.get_rt_score()
+            keywords = self.mov.get_keywords()
             txt = "Movie Summary:" + '\n' + plot + '\n\n' + 'Rotten Tomatoes score:' + \
                   '\n' + score + '\n\n' + 'Keywords:' + '\n' + keywords
         else:
             txt = 'Please enter a movie!'
 
-        self.label = tk.Label(self.window, text=txt,
+        txt_label = tk.Label(self.window, text=txt,
                               wraplength=self.window.winfo_screenwidth(),
                               justify="left", font='calibri 13')
-        self.label.grid(row=3, column=0)
+        txt_label.grid(row=3, column=0)
+
+    def get_movie_name(self):
+        return self.movie
 
     def initiate_GUI(self):
+        self.window.title("Movie Summary")
         welcome_label = tk.Label(self.window, text = 'Enter a movie title!',font='calibri 20')
         welcome_label.grid(row = 0, column = 0, sticky = "N", padx = 20, pady = 10)
         self.text_input = tk.Entry()
@@ -97,4 +100,25 @@ class GUI:
         self.window.mainloop()
 
 if __name__ == '__main__':
-    GUI().initiate_GUI()
+    start = GUI()
+    start.initiate_GUI()
+
+    # for POST:
+    API_ENDPOINT = "https://pastebin.com/api/api_post.php"
+    API_KEY = "BV7KwACoKPnxmZQmOF8JBti2E6CQKkp9"
+    #name = start.get_movie_name()
+    #rt = Wiki(name).get_rt_score()
+    source_code = 'test this string' # rt ############################### JUST TO TEST IT
+
+    data = {'api_dev_key': API_KEY,
+            'api_option': 'paste',
+            'api_paste_code': source_code,
+            'api_paste_format': 'python'}
+    r = requests.post(url=API_ENDPOINT, data=data)
+
+    pastebin_url = r.text
+    print("The pastebin URL is:%s" % pastebin_url)
+
+'''test_movies_list = ['Safety Not Guaranteed', 'Titanic (1997 film)', 'The Matrix',
+               'La Jetée', 'Hot Tub Time Machine', 'WandaVision',
+               'Lost (TV series)', 'Alias (TV series)', 'computer science', 'curry']'''
