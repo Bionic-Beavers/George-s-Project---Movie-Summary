@@ -7,8 +7,6 @@ import requests
 from flask import Flask, request
 
 app = Flask(__name__)
-#env_config = os.getenv("APP_SETTINGS", "config.DevelopmentConfig")
-#app.config.from_object(env_config)
 
 class Wiki:
     """Class for Wikipedia movie info. """
@@ -36,7 +34,6 @@ class Wiki:
             plot_section = 'none'
             return plot_section
 
-
     def get_rt_score(self):
         full_page = WikipediaPage(self.title).content
         sentences = nltk.sent_tokenize(full_page)
@@ -58,9 +55,6 @@ class Wiki:
             nl_indx = -1  # exception
         rt_score = rt_score[nl_indx + 1:]
         return rt_score
-
-
-
 
     def get_keywords(self):
         # to be implemented with Michele's code
@@ -148,6 +142,9 @@ def send_summary(): # for Nick's microservice
     #return "Hello this is the new version!"
 
 if __name__ == '__main__':
+
+    # these two need to be imported here so Heroku doesn't try to import them
+    # (Heroku doesn't work well with these two)
     import tkinter as tk
     import nltk  # I may have to add in nltk.download('punkt')
     start = GUI()
