@@ -10,21 +10,6 @@ app = Flask(__name__)
 #env_config = os.getenv("APP_SETTINGS", "config.DevelopmentConfig")
 #app.config.from_object(env_config)
 
-
-@app.route("/")  # GV: this links index to app.route
-def send_summary(): # for Nick's microservice
-    '''exports the full wikipedia page'''
-
-
-    '''user_input = request.args.get("article")
-    full_page_2 = WikipediaPage(user_input).content
-    return str(full_page_2)'''
-
-    return "Hello this is the new version!"
-
-
-
-
 class Wiki:
     """Class for Wikipedia movie info. """
 
@@ -151,13 +136,23 @@ class GUI:
 
 # To send info to another microservice:
 
+@app.route("/")  # GV: this links index to app.route
+def send_summary(): # for Nick's microservice
+    '''exports the full wikipedia page'''
 
+
+    user_input = request.args.get("article")
+    full_page_2 = WikipediaPage(user_input).content
+    return str(full_page_2)
+
+    #return "Hello this is the new version!"
 
 if __name__ == '__main__':
     import tkinter as tk
     import nltk  # I may have to add in nltk.download('punkt')
     start = GUI()
     start.initiate_GUI()
+
 
 
 #test_movies_list = ['Safety Not Guaranteed', 'Titanic (1997 film)', 'The Matrix', 'La Jetée', 'Hot Tub Time Machine', 'WandaVision', 'Lost (TV series)', 'Alias (TV series)', 'computer science', 'curry']
