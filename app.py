@@ -2,7 +2,6 @@
 # GET AND POST using code from here: https://www.geeksforgeeks.org/get-post-requests-using-python/
 
 import os
-import nltk  # I may have to add in nltk.download('punkt')
 from wikipedia import WikipediaPage
 import requests
 from flask import Flask, request
@@ -24,6 +23,7 @@ def send_summary(): # for Nick's microservice
     return "Hello this is the new version!"
 
 import tkinter as tk
+import nltk  # I may have to add in nltk.download('punkt')
 
 
 class Wiki:
