@@ -2,13 +2,11 @@
 # GET AND POST using code from here: https://www.geeksforgeeks.org/get-post-requests-using-python/
 
 import os
-import nltk  # I may have to add in nltk.download('punkt')
+#import nltk  # I may have to add in nltk.download('punkt')
 from wikipedia import WikipediaPage
 import tkinter as tk
 import requests
 from flask import Flask, request
-
-nltk.download('punkt')
 
 app = Flask(__name__)
 #env_config = os.getenv("APP_SETTINGS", "config.DevelopmentConfig")
