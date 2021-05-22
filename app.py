@@ -140,9 +140,13 @@ class GUI:
 @app.route("/")  # GV: this links index to app.route
 def send_summary(): # for Nick's microservice
     '''exports the full wikipedia page'''
-    user_input = request.args.get("article")
+
+
+    '''user_input = request.args.get("article")
     full_page_2 = WikipediaPage(user_input).content
-    return str(full_page_2)
+    return str(full_page_2)'''
+
+    return "Hello this is the new version!"
 
 
 if __name__ == '__main__':
