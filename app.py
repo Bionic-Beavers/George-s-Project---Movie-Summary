@@ -22,8 +22,7 @@ def send_summary(): # for Nick's microservice
 
     return "Hello this is the new version!"
 
-import tkinter as tk
-import nltk  # I may have to add in nltk.download('punkt')
+
 
 
 class Wiki:
@@ -155,6 +154,8 @@ class GUI:
 
 
 if __name__ == '__main__':
+    import tkinter as tk
+    import nltk  # I may have to add in nltk.download('punkt')
     start = GUI()
     start.initiate_GUI()
 
