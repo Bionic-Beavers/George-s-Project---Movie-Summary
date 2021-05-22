@@ -12,7 +12,7 @@ app = Flask(__name__)
 #env_config = os.getenv("APP_SETTINGS", "config.DevelopmentConfig")
 #app.config.from_object(env_config)
 
-class Wiki:
+'''class Wiki:
     """Class for Wikipedia movie info. """
 
     def __init__(self, movie_title):
@@ -134,7 +134,7 @@ class GUI:
         self.text_input.grid(row = 1, column = 0, sticky = "WE", padx = 10)
         dl_button = tk.Button(text = 'Go', font = 'calibri 13', command = self.get_movie_info)
         dl_button.grid(row=2, column=0, sticky="WE", padx=5, pady=5)
-        self.window.mainloop()
+        self.window.mainloop()'''
 
 # To send info to another microservice:
 @app.route("/")  # GV: this links index to app.route
@@ -149,9 +149,9 @@ def send_summary(): # for Nick's microservice
     return "Hello this is the new version!"
 
 
-if __name__ == '__main__':
+'''if __name__ == '__main__':
     start = GUI()
-    start.initiate_GUI()
+    start.initiate_GUI()'''
 
 
 #test_movies_list = ['Safety Not Guaranteed', 'Titanic (1997 film)', 'The Matrix', 'La Jetée', 'Hot Tub Time Machine', 'WandaVision', 'Lost (TV series)', 'Alias (TV series)', 'computer science', 'curry']
