@@ -1,5 +1,6 @@
 # credit: uses this as a guideline for structuring my tkinter: https://www.youtube.com/watch?v=73WpYMulq2k
 # Flask code created using this guide: https://realpython.com/flask-by-example-part-1-project-setup/
+# Note: this will only work for TV shows if the article has a section titled one of the values in plot_names
 
 from wikipedia import WikipediaPage
 import requests
@@ -62,7 +63,10 @@ class Wiki:
     def get_keywords(self):
         # to be implemented with Michele's code
 
-        plot = self.full_plot_section[:300]  # limited this to prevent problems
+        try:
+            plot = self.full_plot_section[:300]  # limited this to prevent problems
+        except TypeError:
+            plot = "None"
 
         # Michelle's microservice:
         req_url = 'https://the-text-analyzer.herokuapp.com/keyword-service'
