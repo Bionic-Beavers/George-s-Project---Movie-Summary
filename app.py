@@ -144,7 +144,7 @@ def send_summary():  # for Nick's microservice
     """exports the full wikipedia page"""
 
     user_input = request.args.get("article")
-    full_page_2 = WikipediaPage(user_input).content
+    full_page_2 = WikipediaPage(user_input).summary
     return str(full_page_2)
 
 
