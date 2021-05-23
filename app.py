@@ -156,4 +156,3 @@ if __name__ == '__main__':
 
     start = GUI()
     start.initiate_gui()
-    # working?
