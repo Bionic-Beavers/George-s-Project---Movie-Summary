@@ -10,7 +10,6 @@ payload = {"article": wiki_article}
 output = requests.get('https://hidden-basin-72940.herokuapp.com/', params=payload)
 print(output.text)'''
 
-
 from wikipedia import WikipediaPage
 import requests
 from flask import Flask, request
@@ -73,14 +72,14 @@ class Wiki:
         # to be implemented with Michele's code
 
         try:
-            plot = self.full_plot_section[:300]  # limited this to prevent problems
+            plot = self.full_plot_section  # limited this to prevent problems
         except TypeError:
             plot = "None"
 
         # Michelle's microservice:
         req_url = 'https://the-text-analyzer.herokuapp.com/keyword-service'
 
-        my_response = requests.post(req_url, data=plot)
+        my_response = requests.post(req_url, data=plot.encode('utf-8'))
         my_response = my_response.json()
         orig_dict = my_response
         new_dict = {}
@@ -119,14 +118,13 @@ class GUI:
         if self.text_input.get():
             self.movie = self.text_input.get()
 
-            # omit this- it messes up other things like Titanic (1997 film)
-            # movie = movie.title() # capitalizes first letter of every word (ex. safety not guaranteed)
+            # Do not auto-capitalize first letter of every word- it won't work for films like Titanic (1997 film)
             self.mov = Wiki(self.movie)
             plot = self.mov.get_plot()
             score = self.mov.get_rt_score()
             keywords = self.mov.get_keywords()
             txt = "Movie Summary:" + '\n' + plot + '\n\n' + 'Rotten Tomatoes score:' + \
-                  '\n' + score + '\n\n' + 'Keywords:' + '\n' + keywords
+                  '\n' + score + '\n\n' + 'Keywords (words to help the user gauge interest):' + '\n' + keywords
         else:
             txt = 'Please enter a movie!'
 
@@ -162,6 +160,7 @@ def send_summary():  # for Nick's microservice
 
 
 if __name__ == '__main__':
+
     '''these two need to be imported here so Heroku doesn't try to import them
     (Heroku doesn't work well with them)'''
     import tkinter as tk
