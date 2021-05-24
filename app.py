@@ -2,6 +2,15 @@
 # Flask code created using this guide: https://realpython.com/flask-by-example-part-1-project-setup/
 # Note: this will only work for TV shows if the article has a section titled one of the values in plot_names
 
+'''Sample of how to use my Wikipedia summary exporter:
+
+wiki_article = "hat"
+
+payload = {"article": wiki_article}
+output = requests.get('https://hidden-basin-72940.herokuapp.com/', params=payload)
+print(output.text)'''
+
+
 from wikipedia import WikipediaPage
 import requests
 from flask import Flask, request
