@@ -4,8 +4,8 @@
 
 '''Sample of how to use my Wikipedia summary exporter:
 
+import requests
 wiki_article = "hat"
-
 payload = {"article": wiki_article}
 output = requests.get('https://hidden-basin-72940.herokuapp.com/', params=payload)
 print(output.text)'''
