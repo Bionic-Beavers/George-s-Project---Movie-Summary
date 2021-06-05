@@ -1,3 +1,7 @@
+Note: this will only work for TV shows if the article has a section titled one of the values in plot_names.
+
+Example code to test this:
+
 import requests
 
 ######################################################pasted from my main code:
@@ -13,7 +17,7 @@ print(output.text)'''
 ###############################################################################
 
 
-
+Alternative code to test this:
 
 
 

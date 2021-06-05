@@ -4,14 +4,9 @@
 # Flask code created using this guide:
 # https://realpython.com/flask-by-example-part-1-project-setup/
 
-# Note: this will only work for TV shows if the article has a section
-# titled one of the values in plot_names
-
 from wikipedia import WikipediaPage
 import requests
 from flask import Flask, request
-
-app = Flask(__name__)
 
 
 class Wiki:
@@ -21,6 +16,7 @@ class Wiki:
         self.title = movie_title
 
     def get_plot(self):
+        """gets the plot"""
         # This is in case 'Plot' is not found
         plot_names = ['Plot', 'Summary', 'Premise', 'Synopsis']
         plot_section = None
@@ -45,6 +41,7 @@ class Wiki:
             return plot_section
 
     def get_rt_score(self):
+        """gets Rotten Tomatoes score"""
         full_page = WikipediaPage(self.title).content
         sentences = nltk.sent_tokenize(full_page)
         rt_score = [x for x in sentences if
@@ -68,7 +65,7 @@ class Wiki:
         return rt_score
 
     def call_keywords_microservice(self):
-        """added this to shorten original function"""
+        """added this to shorten original get_keywords function"""
         try:
             plot = self.full_plot_section  # limited this to prevent problems
         except TypeError:
@@ -87,7 +84,7 @@ class Wiki:
         return relevance_dict
 
     def get_keywords(self):
-        # to be implemented with Michele's code
+        """gets keywords from Michele's microservice"""
         relevance_dict = Wiki.call_keywords_microservice(self)
 
         # this part uses code from https://bit.ly/3ppwYLn
@@ -95,7 +92,7 @@ class Wiki:
             sorted(relevance_dict, key=relevance_dict.get, reverse=True)
 
         # only show first 20 keywords
-        sorted_keywords = [key for key in sorted_relevance_dict][:20]
+        sorted_keywords = [key for key in sorted_relevance_dict][:30]
         keywords_str = ''
         for i in sorted_keywords:
             keywords_str += i + '   '
@@ -104,7 +101,10 @@ class Wiki:
 
 
 class GUI:
+    """class for everything in the GUI"""
+
     def __init__(self):
+        """sets up the GUI"""
         self.window = tk.Tk()
         width = self.window.winfo_screenwidth()
         height = self.window.winfo_screenheight()
@@ -116,6 +116,7 @@ class GUI:
         self.window.grid_columnconfigure(0, weight=1)
 
     def get_movie_info(self):
+        """gets the movie info"""
         if self.text_input.get():
             self.movie = self.text_input.get()
 
@@ -139,9 +140,11 @@ class GUI:
         txt_label.grid(row=3, column=0)
 
     def get_movie_name(self):
+        """gets movie names"""
         return self.movie
 
     def initiate_gui(self):
+        """initiates the GUI"""
         self.window.title("Movie Summary")
         welcome_label = tk.Label(self.window, text='Enter a movie title!',
                                  font='calibri 20')
@@ -155,6 +158,9 @@ class GUI:
 
 
 # To send info to another microservice:
+app = Flask(__name__)
+
+
 @app.route("/")  # this links index to app.route
 def send_summary():  # for Nick's microservice
     """exports the full wikipedia page"""
