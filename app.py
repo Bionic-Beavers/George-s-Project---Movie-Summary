@@ -1,7 +1,9 @@
 # credit: uses this as a guideline for structuring my tkinter:
 # https://www.youtube.com/watch?v=73WpYMulq2k
+
 # Flask code created using this guide:
 # https://realpython.com/flask-by-example-part-1-project-setup/
+
 # Note: this will only work for TV shows if the article has a section
 # titled one of the values in plot_names
 
@@ -20,9 +22,8 @@ class Wiki:
 
     def get_plot(self):
         # This is in case 'Plot' is not found
-        # In the future have it search for the section names to speed this up
         plot_names = ['Plot', 'Summary', 'Premise', 'Synopsis']
-        plot_section = None  # not necessary?
+        plot_section = None
         self.full_plot_section = None
         for i in plot_names:
             try:
@@ -87,21 +88,15 @@ class Wiki:
 
     def get_keywords(self):
         # to be implemented with Michele's code
-
         relevance_dict = Wiki.call_keywords_microservice(self)
 
-        sorted_keywords = []
+        # this part uses code from https://bit.ly/3ppwYLn
+        sorted_relevance_dict = \
+            sorted(relevance_dict, key=relevance_dict.get, reverse=True)
 
-        # this part uses code from:
-        # https://bit.ly/3ppwYLn
-        for this_key in \
-                sorted(relevance_dict, key=relevance_dict.get, reverse=True):
-            sorted_keywords.append(this_key)
-
-        sorted_keywords = sorted_keywords[:20]  # only show first 20 keywords
-
+        # only show first 20 keywords
+        sorted_keywords = [key for key in sorted_relevance_dict][:20]
         keywords_str = ''
-
         for i in sorted_keywords:
             keywords_str += i + '   '
 
@@ -160,7 +155,7 @@ class GUI:
 
 
 # To send info to another microservice:
-@app.route("/")  # GV: this links index to app.route
+@app.route("/")  # this links index to app.route
 def send_summary():  # for Nick's microservice
     """exports the full wikipedia page"""
 
@@ -174,7 +169,7 @@ if __name__ == '__main__':
     '''these two need to be imported here so Heroku doesn't try to import them
     (Heroku doesn't work well with them)'''
     import tkinter as tk
-    import nltk  # I may have to add in nltk.download('punkt')
+    import nltk
 
     start = GUI()
     start.initiate_gui()
