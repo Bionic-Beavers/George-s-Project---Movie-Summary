@@ -1,5 +1,23 @@
 import requests
 
+######################################################pasted from my main code:
+'''Sample of how to use my Wikipedia summary exporter:
+
+import requests
+wiki_article = "hat"
+payload = {"article": wiki_article}
+web_page = 'https://hidden-basin-72940.herokuapp.com/'
+output = requests.get(web_page, params=payload)
+print(output.text)'''
+
+###############################################################################
+
+
+
+
+
+
+
 
 '''wiki_article = "hat"
 

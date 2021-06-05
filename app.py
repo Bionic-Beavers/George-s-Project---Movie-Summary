@@ -1,14 +1,9 @@
-# credit: uses this as a guideline for structuring my tkinter: https://www.youtube.com/watch?v=73WpYMulq2k
-# Flask code created using this guide: https://realpython.com/flask-by-example-part-1-project-setup/
-# Note: this will only work for TV shows if the article has a section titled one of the values in plot_names
-
-'''Sample of how to use my Wikipedia summary exporter:
-
-import requests
-wiki_article = "hat"
-payload = {"article": wiki_article}
-output = requests.get('https://hidden-basin-72940.herokuapp.com/', params=payload)
-print(output.text)'''
+# credit: uses this as a guideline for structuring my tkinter:
+# https://www.youtube.com/watch?v=73WpYMulq2k
+# Flask code created using this guide:
+# https://realpython.com/flask-by-example-part-1-project-setup/
+# Note: this will only work for TV shows if the article has a section
+# titled one of the values in plot_names
 
 from wikipedia import WikipediaPage
 import requests
@@ -32,9 +27,12 @@ class Wiki:
         for i in plot_names:
             try:
                 plot_section = WikipediaPage(self.title).section(i)
-                self.full_plot_section = plot_section  # saves this to use in get_keywords
-                plot_section = plot_section[
-                               :1000] + '...'  # this is a brief SUMMARY, not the whole movie
+
+                # saves this to use in get_keywords
+                self.full_plot_section = plot_section
+
+                # this is a brief SUMMARY, not the whole movie
+                plot_section = plot_section[:1000] + "..."
                 if plot_section is not None:
                     plot_section = plot_section.replace('\n',
                                                         ' ')  # remove newlines
@@ -68,9 +66,8 @@ class Wiki:
         rt_score = rt_score[nl_indx + 1:]
         return rt_score
 
-    def get_keywords(self):
-        # to be implemented with Michele's code
-
+    def call_keywords_microservice(self):
+        """added this to shorten original function"""
         try:
             plot = self.full_plot_section  # limited this to prevent problems
         except TypeError:
@@ -82,15 +79,23 @@ class Wiki:
         my_response = requests.post(req_url, data=plot.encode('utf-8'))
         my_response = my_response.json()
         orig_dict = my_response
-        new_dict = {}
+        relevance_dict = {}
         for i in orig_dict:
-            new_dict[i] = orig_dict[i][
+            relevance_dict[i] = orig_dict[i][
                 'relevance']  # make a new dict with JUST relevance
+        return relevance_dict
+
+    def get_keywords(self):
+        # to be implemented with Michele's code
+
+        relevance_dict = Wiki.call_keywords_microservice(self)
 
         sorted_keywords = []
 
-        # this part uses code from: https://stackoverflow.com/questions/613183/how-do-i-sort-a-dictionary-by-value
-        for this_key in sorted(new_dict, key=new_dict.get, reverse=True):
+        # this part uses code from:
+        # https://bit.ly/3ppwYLn
+        for this_key in \
+                sorted(relevance_dict, key=relevance_dict.get, reverse=True):
             sorted_keywords.append(this_key)
 
         sorted_keywords = sorted_keywords[:20]  # only show first 20 keywords
@@ -111,20 +116,25 @@ class GUI:
         self.window.geometry("%dx%d" % (width, height))
         self.window.attributes('-topmost',
                                True)  # ensure this window is on top
-        self.window.grid_columnconfigure(0,
-                                         weight=1)  # not totally sure what this does or if it's necessary
+
+        # not totally sure what this does or if it's necessary
+        self.window.grid_columnconfigure(0, weight=1)
 
     def get_movie_info(self):
         if self.text_input.get():
             self.movie = self.text_input.get()
 
-            # Do not auto-capitalize first letter of every word- it won't work for films like Titanic (1997 film)
+            # I did not auto-capitalize first letter of every word-
+            # otherwise (it won't work for films like Titanic (1997 film))
             self.mov = Wiki(self.movie)
             plot = self.mov.get_plot()
             score = self.mov.get_rt_score()
             keywords = self.mov.get_keywords()
-            txt = "Movie Summary:" + '\n' + plot + '\n\n' + 'Rotten Tomatoes score:' + \
-                  '\n' + score + '\n\n' + 'Keywords (words to help the user gauge interest):' + '\n' + keywords
+            txt = "Movie Summary:" + '\n' + plot + '\n\n' + \
+                  'Rotten Tomatoes score:' + \
+                  '\n' + score + '\n\n' + \
+                  'Keywords (words to help the user gauge interest):' + \
+                  '\n' + keywords
         else:
             txt = 'Please enter a movie!'
 
